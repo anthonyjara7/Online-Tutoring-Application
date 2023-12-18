@@ -1,2 +1,6 @@
-.env
-*.env
+.terraform
+.terraform*
+terraform*
+.tfvars
+*.tfvars
+*.pem
