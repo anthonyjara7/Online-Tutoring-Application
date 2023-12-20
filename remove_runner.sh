@@ -15,4 +15,4 @@ TOKEN=$(jq -r '.token' <<< $RESPONSE)
 
 # Removing self-hosted GitHub Action runner configuration
 cd /actions-runner
-sudo env RUNNER_ALLOW_RUNASROOT="1" ./config.sh remove --token $TOKEN
+sudo env RUNNER_ALLOW_RUNASROOT="1" ./config.sh remove --token $TOKEN # Only works with 'sudo env'

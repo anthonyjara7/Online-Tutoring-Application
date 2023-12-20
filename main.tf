@@ -33,38 +33,31 @@ resource "aws_db_instance" "default" {
   password          = var.db_pass
 }
 
+# Removes EC2 instance from GitHub Actions self-hosted runners on termination.
+# Note: connection and provisioner blocks can only reference the self object.
+# The terraform_data resource places the triggers_replace value on the self object
+# so this code is placed separate from the EC2 instance resource
 resource "terraform_data" "terminate" {
-  triggers_replace = [
-    aws_instance.app_server.public_ip,
-    var.admin_username,
-    var.key_path,
-    var.github_token,
-    var.github_owner,
-    var.github_repo,
-  ]
+  # Resource gets destroyed when EC2 public IP changes (in this case, on termination)
+  triggers_replace = {
+    host       = aws_instance.app_server.public_ip,
+    admin_user = var.admin_user,
+    key_path   = var.key_path,
+  }
 
+  # Need to ssh into EC2 instance for remote-exec to function
   connection {
-    type        = "ssh"
-    host        = self.triggers_replace[0]
-    user        = self.triggers_replace[1]
-    private_key = file(self.triggers_replace[2])
+    type = "ssh"
+    # Values accessible in dot notation (triggers_replace.host) or bracket notation (triggers_replace["host"])
+    host        = self.triggers_replace.host
+    user        = self.triggers_replace.admin_user
+    private_key = file(self.triggers_replace.key_path)
   }
 
-  provisioner "file" {
-    content = templatefile("./remove_runner.tftpl", {
-      github_token = self.triggers_replace[3],
-      github_owner = self.triggers_replace[4],
-      github_repo  = self.triggers_replace[5],
-    })
-    destination = "/home/ec2-user/remove_runner.sh"
-  }
-
+  # When this resource is destroyed, upload script to EC2 instance 
   provisioner "remote-exec" {
-    when = destroy
-    inline = [
-      "chmod +x remove_runner.sh",
-      "~/remove_runner.sh",
-    ]
+    when       = destroy
+    script     = "./remove_runner.sh"
     on_failure = continue
   }
 }
@@ -72,24 +65,27 @@ resource "terraform_data" "terminate" {
 resource "aws_instance" "app_server" {
   ami                  = "ami-0230bd60aa48260c6"
   instance_type        = "t2.micro"
-  iam_instance_profile = "EC2-S3-RDS"
+  iam_instance_profile = "OTA-Role"
   key_name             = "tutoring-scheduler"
   security_groups      = ["launch-wizard-4"]
 
   user_data_replace_on_change = true
-  user_data = templatefile("./user_data.tftpl", {
-    github_token = var.github_token,
-    github_owner = var.github_owner,
-    github_repo  = var.github_repo,
-    db_host      = aws_db_instance.default.address,
-    db_name      = var.db_name,
-    db_user      = var.db_user,
-    db_pass      = var.db_pass,
-    db_port      = var.db_port,
-    mfa_email    = var.mfa_email,
-    mfa_pass     = var.mfa_pass,
-  })
+  user_data                   = file("./user_data.sh")
 
+  # User data script requires these parameters to be stored first
+  # before it can access them
+  depends_on = [
+    aws_ssm_parameter.ota_db_host,
+    aws_ssm_parameter.ota_db_name,
+    aws_ssm_parameter.ota_db_port,
+    aws_ssm_parameter.ota_db_user,
+    aws_ssm_parameter.ota_db_pass,
+    aws_ssm_parameter.ota_mfa_email,
+    aws_ssm_parameter.ota_mfa_pass,
+    aws_ssm_parameter.ota_github_token,
+    aws_ssm_parameter.ota_github_owner,
+    aws_ssm_parameter.ota_github_repo,
+  ]
   tags = {
     Name = "github-runner"
   }
