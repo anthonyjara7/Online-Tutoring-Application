@@ -16,7 +16,7 @@ systemctl enable docker --now  # Starts docker daemon now and on startup
 chmod 700 /var/run/docker.sock
 
 # Need to manually install docker compose v2
-DOCKER_CONFIG=$${DOCKER_CONFIG:-/usr/local/lib/docker}
+DOCKER_CONFIG=${DOCKER_CONFIG:-/usr/local/lib/docker}
 mkdir -p $DOCKER_CONFIG/cli-plugins
 curl -SL https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
 chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
@@ -26,10 +26,10 @@ mkdir actions-runner && cd actions-runner
 curl -o actions-runner-linux-x64-2.311.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.311.0/actions-runner-linux-x64-2.311.0.tar.gz
 tar xzf ./actions-runner-linux-x64-2.311.0.tar.gz
 
-# Initializing variables
-GITHUB_TOKEN=${github_token}
-OWNER=${github_owner}
-REPO=${github_repo}
+# Getting parameters from aws systems manager
+GITHUB_TOKEN=$(aws ssm get-parameter --name "/ota/github/token" | jq -r '.Parameter.Value')
+GITHUB_OWNER=$(aws ssm get-parameter --name "/ota/github/owner" | jq -r '.Parameter.Value')
+GITHUB_REPO=$(aws ssm get-parameter --name "/ota/github/repo" | jq -r '.Parameter.Value')
 
 # Getting self-hosted runner registration token
 RESPONSE=$(curl -L \
@@ -37,7 +37,7 @@ RESPONSE=$(curl -L \
   -H "Accept: application/vnd.github+json" \
   -H "Authorization: Bearer $GITHUB_TOKEN" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
-  https://api.github.com/repos/$OWNER/$REPO/actions/runners/registration-token)
+  https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/actions/runners/registration-token)
 
 # Extracting token from JSON response
 TOKEN=$(jq -r '.token' <<< $RESPONSE)
@@ -45,7 +45,7 @@ unset RESPONSE
 
 # Authenticate to GitHub
 export RUNNER_ALLOW_RUNASROOT="1"
-./config.sh --unattended --url https://github.com/$OWNER/$REPO --token $TOKEN
+./config.sh --unattended --url https://github.com/$GITHUB_OWNER/$GITHUB_REPO --token $TOKEN
 
 # Get latest version of repository
 git clone https://github.com/anthonyjara7/Online-Tutoring-Application.git
@@ -62,16 +62,25 @@ cd /actions-runner/Online-Tutoring-Application
 # If repo updated, get latest from main
 git pull origin main
 
+# Getting parameters from aws systems manager
+DB_HOST=$(aws ssm get-parameter --name "/ota/db/host" | jq -r '.Parameter.Value')
+DB_NAME=$(aws ssm get-parameter --name "/ota/db/name" | jq -r '.Parameter.Value')
+DB_USER=$(aws ssm get-parameter --name "/ota/db/user" | jq -r '.Parameter.Value')
+DB_PASS=$(aws ssm get-parameter --name "/ota/db/pass" | jq -r '.Parameter.Value')
+DB_PORT=$(aws ssm get-parameter --name "/ota/db/port" | jq -r '.Parameter.Value')
+MFA_EMAIL=$(aws ssm get-parameter --name "/ota/mfa/email" | jq -r '.Parameter.Value')
+MFA_PASS=$(aws ssm get-parameter --name "/ota/mfa/pass" | jq -r '.Parameter.Value')
+
 # Create envrionment variable file
 IP_ADDRESS=$(curl ifconfig.me)
 cat <<EOT > app.env
-DB_HOST=${db_host}
-DB_NAME=${db_name}
-DB_USER=${db_user}
-DB_PASS=${db_pass}
-DB_PORT=${db_port}
-MFA_EMAIL=${mfa_email}
-MFA_PASSWORD=${mfa_pass}
+DB_HOST=${DB_HOST}
+DB_NAME=${DB_NAME}
+DB_USER=${DB_USER}
+DB_PASS=${DB_PASS}
+DB_PORT=${DB_PORT}
+MFA_EMAIL=${MFA_EMAIL}
+MFA_PASSWORD=${MFA_PASS}
 BACKEND_BASE_URL=$IP_ADDRESS
 EOT
 
