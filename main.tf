@@ -48,7 +48,8 @@ resource "terraform_data" "terminate" {
   # Need to ssh into EC2 instance for remote-exec to function
   connection {
     type = "ssh"
-    # Values accessible in dot notation (triggers_replace.host) or bracket notation (triggers_replace["host"])
+    # triggers_replace values are accessible in dot notation (triggers_replace.host) 
+    # or bracket notation (triggers_replace["host"])
     host        = self.triggers_replace.host
     user        = self.triggers_replace.admin_user
     private_key = file(self.triggers_replace.key_path)
@@ -70,7 +71,7 @@ resource "aws_instance" "app_server" {
   security_groups      = ["launch-wizard-4"]
 
   user_data_replace_on_change = true
-  user_data                   = file("./user_data.sh")
+  user_data                   = file("./user_data.txt")
 
   # User data script requires these parameters to be stored first
   # before it can access them
