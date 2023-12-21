@@ -8,7 +8,9 @@ const uploadController = {
 
   uploadProfilePicture: async (req, res) => {
     console.log(req.file);
-    const s3Client = new S3Client({});
+    const s3Client = new S3Client({
+      region: process.env.S3_BUCKET_REGION,
+    });
     try {
       const key = uuid() + ".jpeg";
       await s3Client.send(
@@ -22,7 +24,7 @@ const uploadController = {
       );
       return res.status(200).json({
         message: "File uploaded successfully",
-        filename: key
+        filename: key,
       });
     } catch (e) {
       console.log(e)

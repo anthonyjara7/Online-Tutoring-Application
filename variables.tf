@@ -118,10 +118,20 @@ resource "aws_ssm_parameter" "ota_s3_bucket_domain" {
   value = aws_s3_bucket.app_bucket.bucket_domain_name
 }
 
+resource "aws_ssm_parameter" "ota_s3_bucket_region" {
+  name  = "/ota/s3/region"
+  type  = "String"
+  value = aws_s3_bucket.app_bucket.region
+}
+
 variable "admin_user" {
   type = string
 }
 
 variable "key_path" {
+  type = string
+}
+
+variable "region" {
   type = string
 }
