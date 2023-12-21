@@ -9,7 +9,7 @@ const uploadController = {
   uploadProfilePicture: async (req, res) => {
     console.log(req.file);
     const s3Client = new S3Client({
-      region: process.env.S3_BUCKET_REGION,
+      region: "us-east-1",
     });
     try {
       const key = uuid() + ".jpeg";
