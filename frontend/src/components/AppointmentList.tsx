@@ -24,7 +24,7 @@ const AppointmentList = (
   }) => {
   const dispatch = useAppDispatch();
   const user_type = useAppSelector((state) => state.auth.user_type);
-
+  
   return (
     <>
       <CardContent>
@@ -48,7 +48,7 @@ const AppointmentList = (
                           width: 50,
                         }}
                         className='my-auto mr-3'
-                        src={`${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${appt.Tutor.profile_picture}`}
+                        src={`${import.meta.env.VITE_S3_BUCKET_DOMAIN}${appt.Tutor.profile_picture}`}
                       />
                     </>
                   }

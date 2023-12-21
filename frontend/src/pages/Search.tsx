@@ -180,9 +180,7 @@ const Search = () => {
                         width: 75,
                       }}
                       className='max-w-[100px] h-auto mx-3'
-                      src={`${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${
-                        val.profile_picture
-                      }`}
+                      src={`${import.meta.env.VITE_S3_BUCKET_DOMAIN}${val.profile_picture}`}
                       alt={`${key}'s profile picture`}
                     />
                     <Stack spacing={2}>
@@ -202,10 +200,8 @@ const Search = () => {
               spacing={2}
               className='flex items-center justify-evenly'>
               <img
-                className='max-w-[100px] h-auto rounded-full'
-                src={`${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${
-                  selectedTutorInfo.profile_picture
-                }`}
+                className='max-w-[100px] h-auto'
+                src={`${import.meta.env.VITE_S3_BUCKET_DOMAIN}${selectedTutorInfo.profile_picture}`}
                 alt={`${selectedTutor}'s profile picture`}
               />
               <Stack spacing={2}>

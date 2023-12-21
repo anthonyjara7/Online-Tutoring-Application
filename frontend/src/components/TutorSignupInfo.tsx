@@ -97,9 +97,7 @@ const TutorSignupInfo = ({
   );
   const [pfp, setPfp] = useState<string>(
     tutorInfo
-      ? `${import.meta.env.VITE_BACKEND_BASE_URL as string}/uploads/${
-          tutorInfo.pfp
-        }`
+      ? `${import.meta.env.VITE_S3_BUCKET_DOMAIN}${tutorInfo.pfp}`
       : ''
   );
 

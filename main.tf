@@ -17,20 +17,18 @@ resource "aws_s3_bucket" "app_bucket" {
   bucket = var.bucket_name
 }
 
-resource "aws_s3_object" "picture_directory" {
-  bucket = aws_s3_bucket.app_bucket.id
-  key    = "profile_pictures/"
-}
-
 resource "aws_db_instance" "default" {
-  allocated_storage = 20
-  engine            = "mysql"
-  engine_version    = "8.0.33"
-  instance_class    = "db.t3.micro"
-  db_name           = var.db_name
-  port              = var.db_port
-  username          = var.db_user
-  password          = var.db_pass
+  allocated_storage   = 20
+  engine              = "mysql"
+  engine_version      = "8.0.33"
+  instance_class      = "db.t3.micro"
+  db_name             = var.db_name
+  port                = var.db_port
+  username            = var.db_user
+  password            = var.db_pass
+  skip_final_snapshot = true
+  snapshot_identifier = var.db_snapshot
+  publicly_accessible = true
 }
 
 # Removes EC2 instance from GitHub Actions self-hosted runners on termination.

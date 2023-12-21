@@ -68,6 +68,8 @@ DB_NAME=$(aws ssm get-parameter --name "/ota/db/name" | jq -r '.Parameter.Value'
 DB_USER=$(aws ssm get-parameter --name "/ota/db/user" | jq -r '.Parameter.Value')
 DB_PASS=$(aws ssm get-parameter --name "/ota/db/pass" | jq -r '.Parameter.Value')
 DB_PORT=$(aws ssm get-parameter --name "/ota/db/port" | jq -r '.Parameter.Value')
+S3_BUCKET=$(aws ssm get-parameter --name "/ota/s3/bucket" | jq -r '.Parameter.Value')
+S3_BUCKET_DOMAIN=$(aws ssm get-parameter --name "/ota/s3/domain" | jq -r '.Parameter.Value')
 MFA_EMAIL=$(aws ssm get-parameter --name "/ota/mfa/email" | jq -r '.Parameter.Value')
 MFA_PASS=$(aws ssm get-parameter --name "/ota/mfa/pass" | jq -r '.Parameter.Value')
 
@@ -79,9 +81,11 @@ DB_NAME=${DB_NAME}
 DB_USER=${DB_USER}
 DB_PASS=${DB_PASS}
 DB_PORT=${DB_PORT}
+S3_BUCKET=${S3_BUCKET}
+S3_BUCKET_DOMAIN=${S3_BUCKET_DOMAIN}
 MFA_EMAIL=${MFA_EMAIL}
 MFA_PASSWORD=${MFA_PASS}
-BACKEND_BASE_URL=$IP_ADDRESS
+BACKEND_BASE_URL=${IP_ADDRESS}
 EOT
 
 # Start application

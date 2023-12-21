@@ -62,7 +62,7 @@ const getUserInfo = async (req, res) => {
     }
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    return res.status(500).send('Internal Server Error');
   }
 };
 
@@ -96,7 +96,7 @@ const getTutorInfo = async (req, res) => {
     return res.status(200).json(data);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    return res.status(500).send('Internal Server Error');
   }
 };
 
@@ -199,7 +199,7 @@ const register = async (req, res) => {
         );
     } catch (err) {
       console.error(err);
-      res.status(500).send('Internal Server Error');
+      return res.status(500).send('Internal Server Error');
     }
   }
 };
@@ -299,7 +299,7 @@ const edit = async (req, res) => {
     return res.status(200).send('User info updated successfully.');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    return res.status(500).send('Internal Server Error');
   }
 };
 

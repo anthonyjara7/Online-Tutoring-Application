@@ -27,6 +27,8 @@ jobs:
       DB_PASS: ${{ secrets.DB_PASS }}
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_PORT: ${{ secrets.DB_PORT }}
+      S3_BUCKET: ${{ secrets.S3_BUCKET }}
+      S3_BUCKET_DOMAIN: ${{ secrets.S3_BUCKET_DOMAIN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

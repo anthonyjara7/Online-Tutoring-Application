@@ -4,6 +4,7 @@ services:
       context: frontend # navigates from current directory to /frontend
     environment:
       - VITE_BACKEND_BASE_URL=$BACKEND_BASE_URL
+      - VITE_S3_BUCKET_DOMAIN=$S3_BUCKET_DOMAIN
     ports:
       - "80:80" # mapping port 80 on host to port 80 on container
     depends_on:
@@ -18,6 +19,7 @@ services:
       - DB_PASS
       - DB_NAME
       - DB_PORT
+      - S3_BUCKET
       - MFA_EMAIL
       - MFA_PASSWORD
     ports:

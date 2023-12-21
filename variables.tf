@@ -42,6 +42,10 @@ variable "db_pass" {
   type = string
 }
 
+variable "db_snapshot" {
+  type = string
+}
+
 resource "aws_ssm_parameter" "ota_db_pass" {
   name  = "/ota/db/pass"
   type  = "String"
@@ -100,6 +104,18 @@ resource "aws_ssm_parameter" "ota_github_repo" {
 
 variable "bucket_name" {
   type = string
+}
+
+resource "aws_ssm_parameter" "ota_s3_bucket" {
+  name  = "/ota/s3/bucket"
+  type  = "String"
+  value = aws_s3_bucket.app_bucket.id
+}
+
+resource "aws_ssm_parameter" "ota_s3_bucket_domain" {
+  name  = "/ota/s3/domain"
+  type  = "String"
+  value = aws_s3_bucket.app_bucket.bucket_domain_name
 }
 
 variable "admin_user" {
