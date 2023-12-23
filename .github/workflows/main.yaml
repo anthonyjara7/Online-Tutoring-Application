@@ -29,6 +29,8 @@ jobs:
       DB_PORT: ${{ secrets.DB_PORT }}
       S3_BUCKET: ${{ secrets.S3_BUCKET }}
       S3_BUCKET_DOMAIN: ${{ secrets.S3_BUCKET_DOMAIN }}
+      MFA_EMAIL: ${{ secrets.MFA_EMAIL }}
+      MFA_PASSWORD: ${{ secrets.MFA_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

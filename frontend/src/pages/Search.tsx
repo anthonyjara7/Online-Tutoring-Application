@@ -120,7 +120,6 @@ const Search = () => {
     setSelectedTutor(value);
   };
 
-  console.log(import.meta.env.VITE_S3_BUCKET_DOMAIN)
   return (
     <ThemeProvider theme={theme}>
       <Box className='grid justify-center bg-[#191919]'>
