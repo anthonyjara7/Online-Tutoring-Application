@@ -29,6 +29,7 @@ jobs:
       DB_PORT: ${{ secrets.DB_PORT }}
       S3_BUCKET: ${{ secrets.S3_BUCKET }}
       S3_BUCKET_DOMAIN: ${{ secrets.S3_BUCKET_DOMAIN }}
+      S3_BUCKET_REGION: ${{ secrets.S3_BUCKET_REGION }}
       MFA_EMAIL: ${{ secrets.MFA_EMAIL }}
       MFA_PASSWORD: ${{ secrets.MFA_PASSWORD }}
     steps:

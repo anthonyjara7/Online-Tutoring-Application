@@ -20,6 +20,7 @@ services:
       - DB_NAME
       - DB_PORT
       - S3_BUCKET
+      - S3_BUCKET_REGION
       - MFA_EMAIL
       - MFA_PASSWORD
     ports:

@@ -1,9 +1,6 @@
 const nodemailer = require("nodemailer");
 
 const sendEmail = async (email, subject, text) => {
-  console.log(process.env)
-  console.log(process.env.MFA_EMAIL)
-  console.log(process.env.MFA_PASSWORD)
   // Set up nodemailer transport (using a service like Gmail, Outlook, etc.)
   let transporter = nodemailer.createTransport({
     // Example with Gmail; replace with your email service details

@@ -7,10 +7,8 @@ const { v4: uuid } = require('uuid');
 const uploadController = {
 
   uploadProfilePicture: async (req, res) => {
-    console.log(req.file);
-    console.log(process.env.S3_BUCKET);
     const s3Client = new S3Client({
-      region: "us-east-1",
+      region: process.env.S3_BUCKET_REGION,
     });
     try {
       const key = uuid() + ".jpeg";
