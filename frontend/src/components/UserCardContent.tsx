@@ -31,7 +31,7 @@ const UserCardContent = ({
                 height: 75,
                 width: 75
               }}
-              src={`${import.meta.env.VITE_S3_BUCKET_DOMAIN}/${profile_picture}`}
+              src={`https://${import.meta.env.VITE_S3_BUCKET_DOMAIN}/${profile_picture}`}
             />
           }
           <Typography
