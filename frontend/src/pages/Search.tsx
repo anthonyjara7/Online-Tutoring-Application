@@ -120,6 +120,7 @@ const Search = () => {
     setSelectedTutor(value);
   };
 
+  console.log(import.meta.env.VITE_S3_BUCKET_DOMAIN)
   return (
     <ThemeProvider theme={theme}>
       <Box className='grid justify-center bg-[#191919]'>
@@ -180,7 +181,7 @@ const Search = () => {
                         width: 75,
                       }}
                       className='max-w-[100px] h-auto mx-3'
-                      src={`${import.meta.env.VITE_S3_BUCKET_DOMAIN}${val.profile_picture}`}
+                      src={`${import.meta.env.VITE_S3_BUCKET_DOMAIN}/${val.profile_picture}`}
                       alt={`${key}'s profile picture`}
                     />
                     <Stack spacing={2}>
@@ -201,7 +202,7 @@ const Search = () => {
               className='flex items-center justify-evenly'>
               <img
                 className='max-w-[100px] h-auto'
-                src={`${import.meta.env.VITE_S3_BUCKET_DOMAIN}${selectedTutorInfo.profile_picture}`}
+                src={`${import.meta.env.VITE_S3_BUCKET_DOMAIN}/${selectedTutorInfo.profile_picture}`}
                 alt={`${selectedTutor}'s profile picture`}
               />
               <Stack spacing={2}>

@@ -48,7 +48,7 @@ const AppointmentList = (
                           width: 50,
                         }}
                         className='my-auto mr-3'
-                        src={`${import.meta.env.VITE_S3_BUCKET_DOMAIN}${appt.Tutor.profile_picture}`}
+                        src={`${import.meta.env.VITE_S3_BUCKET_DOMAIN}/${appt.Tutor.profile_picture}`}
                       />
                     </>
                   }
